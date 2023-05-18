@@ -20,10 +20,6 @@ public class LeaveHistoryEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Setter
-    @ManyToOne(fetch = FetchType.LAZY)
-    private EmployeeInfoEntity employee;
-
     @Column(name= "leave_type")
     private String productName;
 
