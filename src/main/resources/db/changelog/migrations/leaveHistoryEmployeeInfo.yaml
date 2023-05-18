@@ -1,0 +1,77 @@
+databaseChangeLog:
+- changeSet:
+    id: 1684413025625-1
+    author: vmahesh8 (generated)
+    changes:
+    - createTable:
+        columns:
+        - column:
+            constraints:
+              nullable: false
+              primaryKey: true
+              primaryKeyName: employee_infoPK
+            name: id
+            type: bigint
+        - column:
+            name: casual_leave_balance
+            type: int
+        - column:
+            name: employee_mail
+            type: varchar(255)
+        - column:
+            name: manager_mail
+            type: varchar(255)
+        - column:
+            name: privilege_leave_balance
+            type: int
+        - column:
+            name: sick_leave_balance
+            type: int
+        tableName: employee_info
+- changeSet:
+    id: 1684413025625-2
+    author: vmahesh8 (generated)
+    changes:
+    - createTable:
+        columns:
+        - column:
+            autoIncrement: true
+            constraints:
+              nullable: false
+              primaryKey: true
+              primaryKeyName: leave_historyPK
+            name: leave_id
+            type: bigint
+        - column:
+            name: leave_end_date
+            type: date
+        - column:
+            name: leave_start_date
+            type: date
+        - column:
+            name: leave_status
+            type: varchar(255)
+        - column:
+            name: leave_type
+            type: varchar(255)
+        - column:
+            name: total_days
+            type: varchar(255)
+        - column:
+            name: employee_id
+            type: bigint
+        tableName: leave_history
+- changeSet:
+    id: 1684413025625-3
+    author: vmahesh8 (generated)
+    changes:
+    - addForeignKeyConstraint:
+        baseColumnNames: employee_id
+        baseTableName: leave_history
+        constraintName: FKevq2hecndesr6uu4yd2huv6dj
+        deferrable: false
+        initiallyDeferred: false
+        referencedColumnNames: id
+        referencedTableName: employee_info
+        validate: true
+
