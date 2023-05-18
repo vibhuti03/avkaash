@@ -35,6 +35,7 @@ public class EmployeeInfoEntity {
     @Column(name="casual_leave_balance")
     private int casualLeaveBalance;
 
-    @OneToMany(mappedBy = "employee", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<LeaveHistoryEntity> employeeLeave = new ArrayList<>();
+    @OneToMany
+    @JoinColumn(name="employee_id")
+    private List<LeaveHistoryEntity> employeeLeave;
 }

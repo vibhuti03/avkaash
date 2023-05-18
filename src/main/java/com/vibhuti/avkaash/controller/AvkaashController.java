@@ -1,6 +1,7 @@
 package com.vibhuti.avkaash.controller;
 
 import com.vibhuti.avkaash.models.EmployeeInfoEntity;
+import com.vibhuti.avkaash.models.LeaveHistoryEntity;
 import com.vibhuti.avkaash.repositories.EmployeeInfoRepo;
 import com.vibhuti.avkaash.repositories.LeaveHistoryRepo;
 import lombok.extern.log4j.Log4j2;
@@ -28,5 +29,13 @@ public class AvkaashController {
         log.info("Get - Employee list by manager mail");
         return employeeInfoRepo.findByManagerMail(managerMail);
     }
+
+    @GetMapping("/leave-status")
+    public LeaveHistoryEntity getLeaveStatus(
+            @RequestParam("leaveId") Long leaveId
+    ){
+        return leaveHistoryRepo.findById(leaveId) ;
+    }
+
 
 }

@@ -10,5 +10,5 @@ public interface LeaveHistoryRepo extends Repository<LeaveHistoryEntity, Long> {
     LeaveHistoryEntity save(LeaveHistoryEntity leaveHistory);
 
     List<LeaveHistoryEntity> findAll();
-    List<LeaveHistoryEntity> findByEmployeeId(long employeeId);
+    LeaveHistoryEntity findById(long leaveId);
 }
