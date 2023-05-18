@@ -21,7 +21,7 @@ public class LeaveHistoryEntity {
     private Long id;
 
     @Column(name= "leave_type")
-    private String productName;
+    private String leaveType;
 
     @Column(name = "leave_start_date")
     private LocalDate leaveStartDate;
