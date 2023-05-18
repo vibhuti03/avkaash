@@ -14,3 +14,8 @@ Output -
     "totalDays": "1",
     "leaveStatus": "Approved"
 }``
+
+
+#### 2. Delete Leave API - 
+http://localhost:8080/api/v1/delete-leave/##
+This will delete the leave by leave id.
