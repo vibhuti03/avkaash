@@ -1,5 +1,6 @@
 package com.vibhuti.avkaash.response;
 
+import com.vibhuti.avkaash.models.LeaveHistoryEntity;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -21,5 +22,5 @@ public class EmployeeInfoResponse {
 
     private int casualLeaveBalance;
 
-    private List<String> leaveHistory;
+    private List<LeaveHistoryResponse> leaveHistory;
 }

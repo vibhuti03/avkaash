@@ -7,6 +7,7 @@ import com.vibhuti.avkaash.repositories.EmployeeInfoRepo;
 import com.vibhuti.avkaash.repositories.LeaveHistoryRepo;
 import com.vibhuti.avkaash.request.EmployeeInfoRequest;
 import com.vibhuti.avkaash.response.EmployeeInfoResponse;
+import com.vibhuti.avkaash.response.LeaveHistoryResponse;
 import liquibase.repackaged.org.apache.commons.collections4.map.HashedMap;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,7 +18,6 @@ import org.springframework.web.bind.annotation.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 
 @Log4j2
 @RestController
@@ -30,14 +30,13 @@ public class AvkaashController {
     @Autowired
     private LeaveHistoryRepo leaveHistoryRepo;
 
-    //get all Employees
-    @GetMapping("/employee-by-manager/{managerMail}")
+    @GetMapping("/employee-leave-info/{id}")
     public ResponseEntity<List<EmployeeInfoResponse>> getEmployeeByManager(
-            @PathVariable("managerMail")  String managerMail
-    ){
+            @PathVariable("id") Long employeeId
+    ) {
         log.info("Get - Employee list by manager mail");
 
-        List<EmployeeInfoEntity> list =employeeInfoRepo.findByManagerMail(managerMail);
+        List<EmployeeInfoEntity> list = employeeInfoRepo.findById(employeeId);
         List<EmployeeInfoResponse> responseList = new ArrayList<>();
 
         list.forEach(e -> {
@@ -48,22 +47,69 @@ public class AvkaashController {
             employeeResponse.setPrivilegeLeaveBalance(e.getPrivilegeLeaveBalance());
             employeeResponse.setCasualLeaveBalance(e.getCasualLeaveBalance());
             employeeResponse.setSickLeaveBalance(e.getSickLeaveBalance());
-            List<String> leaves = new ArrayList<>();
-            for(LeaveHistoryEntity l : e.getLeaveHistoryEntities()) {
-                leaves.add(l.getLeaveType() + ":" + l.getTotalDays());
-            }
-            employeeResponse.setLeaveHistory(leaves);
+            List<LeaveHistoryResponse> leaveHistoryList = new ArrayList<>();
+            e.getLeaveHistoryEntities().forEach(l -> {
+                LeaveHistoryResponse leaves = new LeaveHistoryResponse();
+                leaves.setLeaveId(l.getId());
+                leaves.setLeaveType(l.getLeaveType());
+                leaves.setLeaveStartDate(l.getLeaveStartDate());
+                leaves.setLeaveEndDate(l.getLeaveEndDate());
+                leaves.setLeaveStatus(l.getLeaveStatus());
+                leaves.setTotalDays(l.getTotalDays());
+
+                leaveHistoryList.add(leaves);
+            });
+
+
+            employeeResponse.setLeaveHistory(leaveHistoryList);
             responseList.add(employeeResponse);
         });
 
         return new ResponseEntity<>(responseList, HttpStatus.OK);
-//                .orElseThrow(() -> new ResourceNotFoundException("No employee found"));
+    }
+
+    @GetMapping("/employee-by-manager/{managerMail}")
+    public ResponseEntity<List<EmployeeInfoResponse>> getEmployeeByManager(
+            @PathVariable("managerMail") String managerMail
+    ) {
+        log.info("Get - Employee list by manager mail");
+
+        List<EmployeeInfoEntity> list = employeeInfoRepo.findByManagerMail(managerMail);
+        List<EmployeeInfoResponse> responseList = new ArrayList<>();
+
+        list.forEach(e -> {
+            EmployeeInfoResponse employeeResponse = new EmployeeInfoResponse();
+            employeeResponse.setId(e.getId());
+            employeeResponse.setEmployeeMail(e.getEmployeeMail());
+            employeeResponse.setManagerMail(e.getManagerMail());
+            employeeResponse.setPrivilegeLeaveBalance(e.getPrivilegeLeaveBalance());
+            employeeResponse.setCasualLeaveBalance(e.getCasualLeaveBalance());
+            employeeResponse.setSickLeaveBalance(e.getSickLeaveBalance());
+            List<LeaveHistoryResponse> leaveHistoryList = new ArrayList<>();
+            e.getLeaveHistoryEntities().forEach(l -> {
+                LeaveHistoryResponse leaves = new LeaveHistoryResponse();
+                leaves.setLeaveId(l.getId());
+                leaves.setLeaveType(l.getLeaveType());
+                leaves.setLeaveStartDate(l.getLeaveStartDate());
+                leaves.setLeaveEndDate(l.getLeaveEndDate());
+                leaves.setLeaveStatus(l.getLeaveStatus());
+                leaves.setTotalDays(l.getTotalDays());
+
+                leaveHistoryList.add(leaves);
+            });
+
+
+            employeeResponse.setLeaveHistory(leaveHistoryList);
+            responseList.add(employeeResponse);
+        });
+
+        return new ResponseEntity<>(responseList, HttpStatus.OK);
     }
 
     @PostMapping("/add-employee-info")
     public ResponseEntity<String> saveEmployeeInfo(
-             @RequestBody EmployeeInfoRequest employeeInfoRequest
-            ){
+            @RequestBody EmployeeInfoRequest employeeInfoRequest
+    ) {
         EmployeeInfoEntity employeeInfo = new EmployeeInfoEntity(employeeInfoRequest);
         employeeInfoRepo.save(employeeInfo);
 
@@ -78,22 +124,34 @@ public class AvkaashController {
             leaveHistoryRepo.save(l);
         });
 
-        return new ResponseEntity<String>("Record saved successfully", HttpStatus.CREATED);
+        return new ResponseEntity<>("Record saved successfully", HttpStatus.CREATED);
     }
 
-    @GetMapping("/leave-status")
-    public LeaveHistoryEntity getLeaveStatus(
-            @RequestParam("leaveId") Long leaveId
-    ){
-        return leaveHistoryRepo.findById(leaveId)
-                .orElseThrow(() -> new ResourceNotFoundException("No leave found"));
+    @GetMapping("/leave-status/{leaveId}")
+    public ResponseEntity<LeaveHistoryResponse> getLeaveStatus(
+            @PathVariable("leaveId") Long leaveId
+    ) {
+        LeaveHistoryEntity leaveHistoryEntity = leaveHistoryRepo.findById(leaveId)
+                .orElseThrow(() -> new ResourceNotFoundException("No leave info found"));
+
+
+        LeaveHistoryResponse leave = new LeaveHistoryResponse();
+        leave.setLeaveId(leaveHistoryEntity.getId());
+        leave.setLeaveType(leaveHistoryEntity.getLeaveType());
+        leave.setLeaveStartDate(leaveHistoryEntity.getLeaveStartDate());
+        leave.setLeaveEndDate(leaveHistoryEntity.getLeaveEndDate());
+        leave.setTotalDays(leaveHistoryEntity.getTotalDays());
+        leave.setLeaveStatus(leaveHistoryEntity.getLeaveStatus());
+        leave.setEmployeeId(leaveHistoryEntity.getEmployee().getId());
+
+        return new ResponseEntity<>(leave, HttpStatus.FOUND);
     }
 
     @DeleteMapping("/delete-leave/{leaveId}/{employeeId}")
     public ResponseEntity<Map<String, Boolean>> deleteLeave(
-        @PathVariable("leaveId") long leaveId,
-        @PathVariable("employeeId") long employeeId
-    ){
+            @PathVariable("leaveId") long leaveId,
+            @PathVariable("employeeId") long employeeId
+    ) {
 
         LeaveHistoryEntity leave = leaveHistoryRepo.findById(leaveId)
                 .orElseThrow(() -> new ResourceNotFoundException("No leave found"));
