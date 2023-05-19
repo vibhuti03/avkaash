@@ -50,5 +50,4 @@ public class LeaveHistoryEntity {
         this.leaveStatus = leaveHistoryRequest.getLeaveStatus();
     }
 
-
 }

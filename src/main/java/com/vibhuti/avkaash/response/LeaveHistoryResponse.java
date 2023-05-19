@@ -1,8 +1,15 @@
 package com.vibhuti.avkaash.response;
 
+import lombok.Getter;
+import lombok.Setter;
+
 import java.time.LocalDate;
 
+@Getter
+@Setter
 public class LeaveHistoryResponse {
+
+    private Long leaveId;
 
     private String leaveType;
 
@@ -13,4 +20,6 @@ public class LeaveHistoryResponse {
     private String totalDays;
 
     private String leaveStatus;
+
+    private Long employeeId;
 }
