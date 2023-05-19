@@ -1,6 +1,8 @@
 package com.vibhuti.avkaash.models;
 
 
+import com.vibhuti.avkaash.request.EmployeeInfoRequest;
+import com.vibhuti.avkaash.request.LeaveHistoryRequest;
 import lombok.*;
 
 import javax.persistence.*;
@@ -34,6 +36,19 @@ public class LeaveHistoryEntity {
 
     @Column(name="leave_status")
     private String leaveStatus;
+
+    @ManyToOne
+    @JoinColumn(name = "employee_id")
+    private EmployeeInfoEntity employee;
+
+    public LeaveHistoryEntity(LeaveHistoryRequest leaveHistoryRequest) {
+        this.id = leaveHistoryRequest.getId();
+        this.leaveType = leaveHistoryRequest.getLeaveType();
+        this.leaveStartDate = leaveHistoryRequest.getLeaveStartDate();
+        this.leaveEndDate = leaveHistoryRequest.getLeaveEndDate();
+        this.totalDays = leaveHistoryRequest.getTotalDays();
+        this.leaveStatus = leaveHistoryRequest.getLeaveStatus();
+    }
 
 
 }

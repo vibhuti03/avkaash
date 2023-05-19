@@ -4,11 +4,15 @@ import com.vibhuti.avkaash.models.EmployeeInfoEntity;
 import org.springframework.data.repository.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface EmployeeInfoRepo extends Repository<EmployeeInfoEntity, Long> {
 
     EmployeeInfoEntity save(EmployeeInfoEntity employeeInfoEntity);
 
-    List<EmployeeInfoEntity> findAll();
+    Optional<EmployeeInfoEntity> findAll();
+    Optional<EmployeeInfoEntity> findById(long id);
     List<EmployeeInfoEntity> findByManagerMail(String managerMail);
+
+
 }

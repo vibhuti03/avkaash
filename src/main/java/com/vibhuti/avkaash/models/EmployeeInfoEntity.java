@@ -1,6 +1,7 @@
 package com.vibhuti.avkaash.models;
 
 
+import com.vibhuti.avkaash.request.EmployeeInfoRequest;
 import lombok.*;
 
 import javax.persistence.*;
@@ -35,7 +36,16 @@ public class EmployeeInfoEntity {
     @Column(name="casual_leave_balance")
     private int casualLeaveBalance;
 
-    @OneToMany
-    @JoinColumn(name="employee_id")
-    private List<LeaveHistoryEntity> employeeLeave;
+    @OneToMany(mappedBy = "employee")
+    private List<LeaveHistoryEntity> leaveHistoryEntities;
+
+    public EmployeeInfoEntity(EmployeeInfoRequest employeeInfoRequest) {
+        this.id = employeeInfoRequest.getId();
+        this.employeeMail = employeeInfoRequest.getEmployeeMail();
+        this.managerMail = employeeInfoRequest.getManagerMail();
+        this.privilegeLeaveBalance = employeeInfoRequest.getPrivilegeLeaveBalance();
+        this.casualLeaveBalance = employeeInfoRequest.getCasualLeaveBalance();
+        this.sickLeaveBalance = employeeInfoRequest.getSickLeaveBalance();
+        this.leaveHistoryEntities = employeeInfoRequest.getLeaveHistory();
+    }
 }
