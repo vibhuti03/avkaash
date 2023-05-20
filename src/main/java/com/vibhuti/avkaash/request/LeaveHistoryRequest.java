@@ -21,4 +21,6 @@ public class LeaveHistoryRequest {
 
     private String leaveStatus;
 
+    private Long employeeId;
+
 }

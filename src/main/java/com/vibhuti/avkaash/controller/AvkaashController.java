@@ -6,6 +6,7 @@ import com.vibhuti.avkaash.models.LeaveHistoryEntity;
 import com.vibhuti.avkaash.repositories.EmployeeInfoRepo;
 import com.vibhuti.avkaash.repositories.LeaveHistoryRepo;
 import com.vibhuti.avkaash.request.EmployeeInfoRequest;
+import com.vibhuti.avkaash.request.LeaveHistoryRequest;
 import com.vibhuti.avkaash.response.EmployeeInfoResponse;
 import com.vibhuti.avkaash.response.LeaveHistoryResponse;
 import liquibase.repackaged.org.apache.commons.collections4.map.HashedMap;
@@ -18,6 +19,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @Log4j2
 @RestController
@@ -30,13 +32,14 @@ public class AvkaashController {
     @Autowired
     private LeaveHistoryRepo leaveHistoryRepo;
 
+    //For employee/manager to get info on the employee's leave
     @GetMapping("/employee-leave-info/{id}")
     public ResponseEntity<List<EmployeeInfoResponse>> getEmployeeByManager(
             @PathVariable("id") Long employeeId
     ) {
-        log.info("Get - Employee list by manager mail");
+        log.info("Get - Employee list by employee ID");
 
-        List<EmployeeInfoEntity> list = employeeInfoRepo.findById(employeeId);
+        List<EmployeeInfoEntity> list = (employeeInfoRepo.findById(employeeId)).stream().collect(Collectors.toList());
         List<EmployeeInfoResponse> responseList = new ArrayList<>();
 
         list.forEach(e -> {
@@ -68,6 +71,7 @@ public class AvkaashController {
         return new ResponseEntity<>(responseList, HttpStatus.OK);
     }
 
+    //For manager to get data on each of their employee's leaves
     @GetMapping("/employee-by-manager/{managerMail}")
     public ResponseEntity<List<EmployeeInfoResponse>> getEmployeeByManager(
             @PathVariable("managerMail") String managerMail
@@ -106,6 +110,7 @@ public class AvkaashController {
         return new ResponseEntity<>(responseList, HttpStatus.OK);
     }
 
+    // For manager to add employee info on DB
     @PostMapping("/add-employee-info")
     public ResponseEntity<String> saveEmployeeInfo(
             @RequestBody EmployeeInfoRequest employeeInfoRequest
@@ -127,6 +132,39 @@ public class AvkaashController {
         return new ResponseEntity<>("Record saved successfully", HttpStatus.CREATED);
     }
 
+    //For employee to apply leave
+    @PostMapping("/apply-leave")
+    public ResponseEntity<String> applyLeave(
+            @RequestBody LeaveHistoryRequest leaveHistoryRequest
+            ){
+
+        EmployeeInfoEntity employee = employeeInfoRepo.findById(leaveHistoryRequest.getEmployeeId())
+                .orElseThrow(() -> new ResourceNotFoundException("Invalid employee ID"));
+
+        leaveHistoryRequest.setLeaveStatus("Applied");
+
+        LeaveHistoryEntity leaveApplication = new LeaveHistoryEntity(leaveHistoryRequest, employee);
+
+        leaveHistoryRepo.save(leaveApplication);
+
+        return new ResponseEntity<>("Leave Applied", HttpStatus.ACCEPTED);
+    }
+
+    @PutMapping("/approve-leave/{leaveId}")
+    public ResponseEntity<String> approveLeave(
+            @PathVariable("leaveId") Long leaveId
+    ){
+        LeaveHistoryEntity leave = leaveHistoryRepo.findById(leaveId)
+                .orElseThrow(() -> new ResourceNotFoundException("No such leave applied"));
+
+        leave.setLeaveStatus("Approved");
+
+        leaveHistoryRepo.save(leave);
+
+        return new ResponseEntity<>("Leave " +leaveId+ " approved", HttpStatus.ACCEPTED);
+    }
+
+    //For employee/manager to get the leave status by leave id
     @GetMapping("/leave-status/{leaveId}")
     public ResponseEntity<LeaveHistoryResponse> getLeaveStatus(
             @PathVariable("leaveId") Long leaveId
@@ -147,6 +185,7 @@ public class AvkaashController {
         return new ResponseEntity<>(leave, HttpStatus.FOUND);
     }
 
+    //For employee to delete a previously applied leave
     @DeleteMapping("/delete-leave/{leaveId}/{employeeId}")
     public ResponseEntity<Map<String, Boolean>> deleteLeave(
             @PathVariable("leaveId") long leaveId,
@@ -156,12 +195,13 @@ public class AvkaashController {
         LeaveHistoryEntity leave = leaveHistoryRepo.findById(leaveId)
                 .orElseThrow(() -> new ResourceNotFoundException("No leave found"));
 
-//        log.info(employeeInfoRepo.findById(employeeId).get().getEmployeeLeave().toString());
+        log.info(leave.getEmployee().getId());
 
         leaveHistoryRepo.deleteById(leaveId);
 
         Map<String, Boolean> deleted = new HashedMap<>();
-        deleted.put("deleted", Boolean.TRUE);
+        deleted.put("Deleted "+leave.getTotalDays()+ " days of "+leave.getLeaveType()+" leave for employee id: "+leave.getEmployee().getId(),
+                Boolean.TRUE);
 
         return ResponseEntity.ok(deleted);
     }
