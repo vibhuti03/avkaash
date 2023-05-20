@@ -32,7 +32,7 @@ public class AvkaashController {
     @Autowired
     private LeaveHistoryRepo leaveHistoryRepo;
 
-    //For employee/manager to get info on the employee's leave
+    //1. For employee/manager to get info on the employee's leave
     @GetMapping("/employee-leave-info/{id}")
     public ResponseEntity<List<EmployeeInfoResponse>> getEmployeeByManager(
             @PathVariable("id") Long employeeId
@@ -71,7 +71,7 @@ public class AvkaashController {
         return new ResponseEntity<>(responseList, HttpStatus.OK);
     }
 
-    //For manager to get data on each of their employee's leaves
+    //2. For manager to get data on each of their employee's leaves
     @GetMapping("/employee-by-manager/{managerMail}")
     public ResponseEntity<List<EmployeeInfoResponse>> getEmployeeByManager(
             @PathVariable("managerMail") String managerMail
@@ -110,7 +110,7 @@ public class AvkaashController {
         return new ResponseEntity<>(responseList, HttpStatus.OK);
     }
 
-    // For manager to add employee info on DB
+    //3. For manager to add employee info on DB
     @PostMapping("/add-employee-info")
     public ResponseEntity<String> saveEmployeeInfo(
             @RequestBody EmployeeInfoRequest employeeInfoRequest
@@ -132,7 +132,7 @@ public class AvkaashController {
         return new ResponseEntity<>("Record saved successfully", HttpStatus.CREATED);
     }
 
-    //For employee to apply leave
+    //4. For employee to apply leave
     @PostMapping("/apply-leave")
     public ResponseEntity<String> applyLeave(
             @RequestBody LeaveHistoryRequest leaveHistoryRequest
@@ -150,6 +150,7 @@ public class AvkaashController {
         return new ResponseEntity<>("Leave Applied", HttpStatus.ACCEPTED);
     }
 
+    //5. For manager to approve leave
     @PutMapping("/approve-leave/{leaveId}")
     public ResponseEntity<String> approveLeave(
             @PathVariable("leaveId") Long leaveId
@@ -164,7 +165,7 @@ public class AvkaashController {
         return new ResponseEntity<>("Leave " +leaveId+ " approved", HttpStatus.ACCEPTED);
     }
 
-    //For employee/manager to get the leave status by leave id
+    //6. For employee/manager to get the leave status by leave id
     @GetMapping("/leave-status/{leaveId}")
     public ResponseEntity<LeaveHistoryResponse> getLeaveStatus(
             @PathVariable("leaveId") Long leaveId
@@ -185,7 +186,7 @@ public class AvkaashController {
         return new ResponseEntity<>(leave, HttpStatus.FOUND);
     }
 
-    //For employee to delete a previously applied leave
+    //7. For employee to delete a previously applied leave
     @DeleteMapping("/delete-leave/{leaveId}/{employeeId}")
     public ResponseEntity<Map<String, Boolean>> deleteLeave(
             @PathVariable("leaveId") long leaveId,
