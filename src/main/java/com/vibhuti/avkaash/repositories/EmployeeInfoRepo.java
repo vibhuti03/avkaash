@@ -12,7 +12,7 @@ public interface EmployeeInfoRepo extends Repository<EmployeeInfoEntity, Long> {
     EmployeeInfoEntity save(EmployeeInfoEntity employeeInfoEntity);
 
     Optional<EmployeeInfoEntity> findAll();
-    List<EmployeeInfoEntity> findById(long id);
+    Optional<EmployeeInfoEntity> findById(long id);
     List<EmployeeInfoEntity> findByManagerMail(String managerMail);
 
 

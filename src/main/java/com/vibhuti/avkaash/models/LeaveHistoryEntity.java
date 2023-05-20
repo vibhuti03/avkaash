@@ -41,13 +41,14 @@ public class LeaveHistoryEntity {
     @JoinColumn(name = "employee_id")
     private EmployeeInfoEntity employee;
 
-    public LeaveHistoryEntity(LeaveHistoryRequest leaveHistoryRequest) {
-        this.id = leaveHistoryRequest.getId();
+    public LeaveHistoryEntity(LeaveHistoryRequest leaveHistoryRequest, EmployeeInfoEntity employee) {
+//        this.id = leaveHistoryRequest.getId();
         this.leaveType = leaveHistoryRequest.getLeaveType();
         this.leaveStartDate = leaveHistoryRequest.getLeaveStartDate();
         this.leaveEndDate = leaveHistoryRequest.getLeaveEndDate();
         this.totalDays = leaveHistoryRequest.getTotalDays();
         this.leaveStatus = leaveHistoryRequest.getLeaveStatus();
+        this.employee = employee;
     }
 
 }
