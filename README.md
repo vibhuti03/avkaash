@@ -1,6 +1,8 @@
 # avkaash
 A Leave Management System
 
+This is a self-developed project using SpringBoot, Hibernate and Data JPA. It enables employees to submit leave requests, track their status, and manages approval workflows. With all the CRUD operations via RESTful APIs, it offers seamless data manipulation. Liquibase ensures smooth database updates. 
+
 ## Databases
 
 There are two tables currently supporting the system, which are - 
