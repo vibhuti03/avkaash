@@ -4,9 +4,9 @@ A Leave Management System
 ## Databases
 
 There are two tables currently supporting the system, which are - 
-1. ``**employee_info**`` - To store the basic employee details and associated manager information.
+1. ``employee_info`` - To store the basic employee details and associated manager information.
    
-2. ``**leave_history**`` - To store the applied and approved leave status
+2. ``leave_history`` - To store the applied and approved leave status
 
 
 ## API
