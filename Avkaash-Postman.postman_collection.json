@@ -1,0 +1,195 @@
+{
+	"info": {
+		"_postman_id": "8073335a-eec0-4bd4-9279-9cfbfaf17bac",
+		"name": "Avkaash-Postman",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "1. Employee Leave Info",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/api/v1/employee-leave-info/201",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"v1",
+						"employee-leave-info",
+						"201"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "2. Employees by Manager",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/api/v1/employee-by-manager/govind@tempmail.com",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"v1",
+						"employee-by-manager",
+						"govind@tempmail.com"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "3. Add Employee",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"id\": 102,\r\n    \"employeeMail\": \"trial@trial.com\",\r\n    \"managerMail\": \"random@random.com\",\r\n    \"privilegeLeaveBalance\": \"10\",\r\n    \"sickLeaveBalance\": \"7\",\r\n    \"casualLeaveBalance\": \"15\",\r\n    \"leaveHistory\": []    \r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/api/v1/add-employee-info",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"v1",
+						"add-employee-info"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "4. Apply leave",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"leaveType\": \"Privilege\",\r\n    \"leaveStartDate\": \"2023-01-12\",\r\n    \"leaveEndDate\": \"2023-01-11\",\r\n    \"totalDays\": \"1\",\r\n    \"employeeId\": 205\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/api/v1/apply-leave",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"v1",
+						"apply-leave"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "5. Approve Leave",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/api/v1/approve-leave/101",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"v1",
+						"approve-leave",
+						"101"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "6. Leave Status",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/api/v1/leave-status/12",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"v1",
+						"leave-status",
+						"12"
+					],
+					"query": [
+						{
+							"key": "managerMail",
+							"value": "govind@tempmail.com",
+							"disabled": true
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "7. Delete Leave",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/api/v1/delete-leave/3/201",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"v1",
+						"delete-leave",
+						"3",
+						"201"
+					],
+					"query": [
+						{
+							"key": "managerMail",
+							"value": "govind@tempmail.com",
+							"disabled": true
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"protocolProfileBehavior": {}
+}
